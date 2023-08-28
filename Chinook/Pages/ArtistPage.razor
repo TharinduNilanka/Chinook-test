@@ -74,7 +74,8 @@ else
             <select class="form-control" id="ExistingPlaylist" @bind="selectedExistingPlaylist">
                 @foreach (var playList in UserPlayLists)
                 {
-                    <option>@playList?.Name</option>
+                    <option value="">Please select a playlist</option>
+                    <option value="@playList.PlaylistId">@playList?.Name</option>
                 }
             </select>
         </div>

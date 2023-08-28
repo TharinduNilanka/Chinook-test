@@ -7,5 +7,6 @@ namespace Chinook.Database.Repositories.Contract
         Task<Playlist> GetPlayListByIdAsync(long playListId);
         Task AddTrackToPlayList(long trackId, string playListName, long? playListId = null);
         Task MarkTrackUnFavorite(long trackId);
+        public event EventHandler PlayListAdded;
     }
 }

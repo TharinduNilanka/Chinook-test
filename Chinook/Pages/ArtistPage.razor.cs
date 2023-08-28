@@ -9,6 +9,7 @@ using Chinook.Database.Repositories;
 using Chinook.Database.Repositories.Contract;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Chinook.Migrations;
+using Chinook.DomainExceptions;
 
 namespace Chinook.Pages
 {
@@ -25,7 +26,7 @@ namespace Chinook.Pages
         private List<PlaylistTrack> Tracks;
         private PlaylistTrack SelectedTrack;
         private string InfoMessage;
-        private long selectedExistingPlaylist;
+        private long? selectedExistingPlaylist = null;
         private string newPlaylistName;
 
         protected override async Task OnInitializedAsync()
@@ -68,8 +69,14 @@ namespace Chinook.Pages
         private async void AddTrackToPlaylist()
         {
             CloseInfoMessage();
-            InfoMessage = $"Track {Artist.Name} - {SelectedTrack.AlbumTitle} - {SelectedTrack.TrackName} added to playlist {{playlist name}}.";
+            InfoMessage = $"Track {Artist.Name} - {SelectedTrack.AlbumTitle} - {SelectedTrack.TrackName} added to play list {{play list name}}.";
+
+            if (newPlaylistName == null && selectedExistingPlaylist == null)
+            {
+                InfoMessage = "Please pass a valid play list or pass new play list name.";
+            }
             await PlayListRepository.AddTrackToPlayList(SelectedTrack.TrackId, newPlaylistName, selectedExistingPlaylist);
+           
             PlaylistDialog.Close();
         }
 

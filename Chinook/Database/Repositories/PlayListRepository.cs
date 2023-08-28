@@ -6,6 +6,7 @@ using PlaylistDto = Chinook.ClientModels.Playlist;
 using Playlist = Chinook.Models.Playlist;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Chinook.DomainExceptions;
 
 namespace Chinook.Database.Repositories
 {
@@ -13,6 +14,7 @@ namespace Chinook.Database.Repositories
     {
         private readonly ChinookContext _dbContext;
         private readonly IUserRepository _userRepository;
+        public event EventHandler PlayListAdded;
         public PlayListRepository(ChinookContext dbContext, IUserRepository userRepository)
         {
             _dbContext = dbContext;
@@ -44,10 +46,6 @@ namespace Chinook.Database.Repositories
             var currentUserId = await _userRepository.GetUserId();
             var playList = new Playlist();
 
-            if(playListName == null && playListId == null)
-            {
-                throw new Exception();
-            } 
 
             if(playListId != null)
             { 
@@ -81,7 +79,7 @@ namespace Chinook.Database.Repositories
                 await _dbContext.UserPlaylists.AddAsync(new UserPlaylist { UserId = currentUserId, PlaylistId = playlist.PlaylistId });
                 await _dbContext.SaveChangesAsync();
             }
-
+            PlayListAdded?.Invoke(this, EventArgs.Empty);
             return playlist;
         }
 

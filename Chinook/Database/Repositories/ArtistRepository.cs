@@ -21,5 +21,15 @@ namespace Chinook.Database.Repositories
         {
             return _dbContext.Artists.SingleOrDefault(a => a.ArtistId == ArtistId);
         }
+
+        public async Task<List<Artist>> GetArtists()
+        {
+            return _dbContext.Artists.ToList();
+        }
+
+        public async Task<List<Album>> GetAlbumsForArtist(int artistId)
+        {
+            return _dbContext.Albums.Where(a => a.ArtistId == artistId).ToList();
+        }
     }
 }
